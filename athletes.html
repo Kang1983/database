@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Athletes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Athlete Database</h1>
+    <p class="subtitle">Search by name, age, GPA, or performance</p>
+
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search athletes...">
+    </div>
+
+    <div id="list"></div>
+
+    <div class="nav">
+      <a href="index.html">Home</a>
+      <a href="register-athlete.html">Add Athlete</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    function render(filter = '') {
+      const athletes = getAthletes();
+      const list = document.getElementById('list');
+      const filtered = athletes.filter(a => {
+        const text = `${a.name} ${a.age} ${a.gpa} ${a.height} ${(a.personalBests||[]).join(' ')}`.toLowerCase();
+        return text.includes(filter.toLowerCase());
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<p style="text-align:center;">No athletes found.</p>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(a => `
+        <div class="athlete-card">
+          <h3>${a.name}</h3>
+          <p>Age: ${a.age}</p>
+          <p>GPA: ${a.gpa}</p>
+          <p>Height: ${a.height}</p>
+          ${a.personalBests && a.personalBests.length ? 
+            '<p><strong>Personal Bests:</strong></p><ul style="margin-left:20px;">' + 
+            a.personalBests.map(pb => `<li>${pb}</li>`).join('') + '</ul>' 
+            : '<p>No personal bests listed.</p>'}
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('search').addEventListener('input', e => render(e.target.value));
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Athlete Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Athlete Dashboard</h1>
+    <div id="content">Loading...</div>
+    <div class="nav">
+      <a href="athletes.html">Browse Athletes</a>
+      <a href="index.html">Home</a>
+      <a href="#" id="logout">Logout</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const user = getSession();
+    if (!user || user.type !== 'athlete') {
+      window.location.href = 'login.html';
+    } else {
+      const athletes = getAthletes();
+      const athlete = athletes.find(a => a.id === user.id);
+      if (athlete) {
+        document.getElementById('content').innerHTML = `
+          <h2>${athlete.name}</h2>
+          <p>Age: ${athlete.age}</p>
+          <p>GPA: ${athlete.gpa}</p>
+          <p>Height: ${athlete.height}</p>
+          <p><strong>Personal Bests:</strong></p>
+          <ul style="margin-left:20px;">
+            ${(athlete.personalBests || []).map(pb => `<li>${pb}</li>`).join('') || '<li>None listed</li>'}
+          </ul>
+        `;
+      }
+    }
+
+    document.getElementById('logout').addEventListener('click', function(e) {
+      e.preventDefault();
+      clearSession();
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

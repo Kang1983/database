@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Athlete Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Create Athlete Profile</h1>
+    <p class="subtitle">Fill in your information so coaches and visitors can find you.</p>
+
+    <div id="message" style="display:none;"></div>
+
+    <form id="athleteForm">
+      <div class="form-group">
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="age">Age *</label>
+        <input type="number" id="age" min="10" max="25" required>
+      </div>
+      <div class="form-group">
+        <label for="gpa">Grade Point Average (GPA)</label>
+        <input type="text" id="gpa" placeholder="e.g. 3.8">
+      </div>
+      <div class="form-group">
+        <label for="height">Height</label>
+        <input type="text" id="height" placeholder="e.g. 5'10" or 178 cm">
+      </div>
+      <div class="form-group">
+        <label for="password">Password *</label>
+        <input type="password" id="password" required minlength="4">
+      </div>
+      <div class="form-group">
+        <label for="pbs">Personal Best Performances (one per line)</label>
+        <textarea id="pbs" rows="4" placeholder="100m - 11.2&#10;Long Jump - 22' 1"&#10;800m - 2:05"></textarea>
+      </div>
+      <button type="submit" class="btn">Save Profile</button>
+    </form>
+
+    <div class="nav">
+      <a href="index.html">Home</a>
+      <a href="athletes.html">Browse Athletes</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('athleteForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const athletes = getAthletes();
+      const athlete = {
+        id: generateId(),
+        name: document.getElementById('name').value.trim(),
+        age: document.getElementById('age').value,
+        gpa: document.getElementById('gpa').value.trim() || 'Not listed',
+        height: document.getElementById('height').value.trim() || 'Not listed',
+        personalBests: document.getElementById('pbs').value.trim().split('\n').filter(l => l.trim()),
+        password: document.getElementById('password').value,
+        created: new Date().toISOString()
+      };
+      athletes.push(athlete);
+      saveAthletes(athletes);
+
+      const msg = document.getElementById('message');
+      msg.className = 'success';
+      msg.style.display = 'block';
+      msg.textContent = 'Profile saved! Your ID is ' + athlete.id;
+      document.getElementById('athleteForm').reset();
+    });
+  </script>
+</body>
+</html>

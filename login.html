@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Login</h1>
+    <p class="subtitle">Sign in as an athlete or coach</p>
+
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+      <button type="button" class="btn" id="athleteTab" style="flex:1;">Athlete</button>
+      <button type="button" class="btn" id="coachTab" style="flex:1;">Coach</button>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required>
+      </div>
+      <button type="submit" class="btn" id="submitBtn">Login as Athlete</button>
+    </form>
+
+    <div class="nav">
+      <a href="index.html">Home</a>
+      <a href="register-athlete.html">Create Athlete Profile</a>
+      <a href="register-coach.html">Create Coach Profile</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let loginType = 'athlete';
+
+    document.getElementById('athleteTab').addEventListener('click', function() {
+      loginType = 'athlete';
+      document.getElementById('submitBtn').textContent = 'Login as Athlete';
+      document.getElementById('athleteTab').style.background = '#000';
+      document.getElementById('athleteTab').style.color = '#fff';
+      document.getElementById('coachTab').style.background = '#fff';
+      document.getElementById('coachTab').style.color = '#000';
+    });
+
+    document.getElementById('coachTab').addEventListener('click', function() {
+      loginType = 'coach';
+      document.getElementById('submitBtn').textContent = 'Login as Coach';
+      document.getElementById('coachTab').style.background = '#000';
+      document.getElementById('coachTab').style.color = '#fff';
+      document.getElementById('athleteTab').style.background = '#fff';
+      document.getElementById('athleteTab').style.color = '#000';
+    });
+
+    // Set initial tab style
+    document.getElementById('athleteTab').style.background = '#000';
+    document.getElementById('athleteTab').style.color = '#fff';
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('error');
+
+      let success = false;
+      if (loginType === 'athlete') {
+        success = loginAthlete(name, password);
+      } else {
+        success = loginCoach(name, password);
+      }
+
+      if (success) {
+        window.location.href = loginType === 'athlete' ? 'athlete-dashboard.html' : 'coach-dashboard.html';
+      } else {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Invalid name or password.';
+      }
+    });
+  </script>
+</body>
+</html>

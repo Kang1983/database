@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coach Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Coach Dashboard</h1>
+    <div id="content">Loading...</div>
+    <div class="nav">
+      <a href="athletes.html">Browse Athletes</a>
+      <a href="index.html">Home</a>
+      <a href="#" id="logout">Logout</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const user = getSession();
+    if (!user || user.type !== 'coach') {
+      window.location.href = 'login.html';
+    } else {
+      const coaches = getCoaches();
+      const coach = coaches.find(c => c.id === user.id);
+      if (coach) {
+        document.getElementById('content').innerHTML = `
+          <h2>${coach.name}</h2>
+          <p>School: ${coach.school}</p>
+          <p>Sport: ${coach.sport}</p>
+          <p>Email: ${coach.email}</p>
+          <p style="margin-top:20px;">You can now browse the full athlete database.</p>
+        `;
+      }
+    }
+
+    document.getElementById('logout').addEventListener('click', function(e) {
+      e.preventDefault();
+      clearSession();
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
